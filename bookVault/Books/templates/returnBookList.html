@@ -1,0 +1,559 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books to Return</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-main: #efede3;
+            --bg-card: #f7f6ef;
+            --bg-soft: #faf9f3;
+            --text-main: #1e1e1e;
+            --text-muted: #6f6f6f;
+            --border-soft: #dedccf;
+            --accent-dark: #222;
+            --card-bg: #fffaf4;
+            --border-soft: #d6cabb;
+            --beige-light: #f7e9d7;
+            --beige-medium: #e7ddcf;
+            --brown-dark: #3b2f2f;
+            --brown-soft: #6b4f4f;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #2a1e1e;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--beige-light);
+            padding: 24px 32px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--beige-light);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card span {
+            color: ;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h2 {
+            color: #6b4f4f;
+            font-size: 32px;
+        }
+
+        .books-list {
+            background: var(--beige-light);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-header {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--brown-soft);
+        }
+
+        .list-header h2 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .book-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .book-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .book-cover {
+            width: 80px;
+            height: 110px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .book-details {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .book-author {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .book-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+        }
+
+        .meta-item {
+            color: #888;
+        }
+
+        .meta-item strong {
+            color: #333;
+        }
+
+        .status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.returned {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .return-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .return-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .return-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-state span {
+            font-size: 64px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--beige-medium);
+            color: var(--brown-soft);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/studentDashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div class="header">
+            <h1>Books to Return</h1>
+            <p>Manage your borrowed books and return them here</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span>Total Borrowed</span>
+                <h2>{{ issued_books_count }}</h2>
+            </div>
+            <div class="stat-card">
+                <span>Pending Returns</span>
+                <h2>{{ pending_count }}</h2>
+            </div>
+            <div class="stat-card">
+                <span>Total Fines</span>
+                <h2>₹{{ total_fines }}</h2>
+            </div>
+        </div>
+
+        <div class="books-list">
+            <div class="list-header">
+                <h2>Your Borrowed Books</h2>
+            </div>
+
+            {% if issued_books %}
+            {% for issue in issued_books %}
+            <div class="book-item">
+                <div class="book-cover">📚</div>
+
+                <div class="book-details">
+                    <div class="book-title">{{ issue.book.title }}</div>
+                    <div class="book-author">by {{ issue.book.author }}</div>
+                    <div class="book-meta">
+                        <div class="meta-item">
+                            <strong>Issued:</strong> {{ issue.issued_at|date:"M d, Y" }}
+                        </div>
+                        <div class="meta-item">
+                            <strong>Due:</strong> {{ issue.due_date|date:"M d, Y" }}
+                        </div>
+                        {% if issue.fine > 0 %}
+                        <div class="meta-item">
+                            <strong>Fine:</strong> ₹{{ issue.fine }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if issue.returned_at %}
+                <span class="status returned">Returned</span>
+                {% else %}
+                <form method="POST" action="/returnBook/{{ issue.id }}/" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="return-btn">Return Book</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <span>📖</span>
+                <h3>No books borrowed</h3>
+                <p>You haven't borrowed any books yet</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Add this modal HTML right before closing </body> tag in returnBookList.html -->
+
+    <!-- Confirmation Modal -->
+    <div id="returnModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Return Book</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="book-info">
+                    <div class="book-icon">📚</div>
+                    <div>
+                        <p class="modal-book-title" id="modalBookTitle"></p>
+                        <p class="modal-book-author" id="modalBookAuthor"></p>
+                    </div>
+                </div>
+                <p class="confirm-message">Are you sure you want to return this book?</p>
+                <p class="fine-notice" id="fineNotice" style="display: none;">
+                    ⚠️ Fine Amount: ₹<span id="fineAmount"></span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <form id="returnForm" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="confirm-btn">Yes, Return Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: var(--beige-light);
+            margin: 10% auto;
+            border-radius: 16px;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 2px solid var(--border-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: var(--brown-dark);
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .close-btn {
+            color: var(--text-muted);
+            font-size: 32px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--brown-dark);
+        }
+
+        .modal-body {
+            padding: 28px;
+        }
+
+        .book-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .book-icon {
+            font-size: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-book-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--brown-dark);
+            margin-bottom: 4px;
+        }
+
+        .modal-book-author {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .confirm-message {
+            font-size: 15px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .fine-notice {
+            background: #fff3e0;
+            color: #f57c00;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border-left: 4px solid #ff9800;
+        }
+
+        .modal-footer {
+            padding: 20px 28px;
+            border-top: 2px solid var(--border-soft);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .cancel-btn {
+            padding: 10px 24px;
+            background: var(--beige-medium);
+            color: var(--brown-soft);
+            border: 2px solid var(--border-soft);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: var(--border-soft);
+            transform: translateY(-2px);
+        }
+
+        .confirm-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+
+    <script>
+        function openReturnModal(issueId, bookTitle, bookAuthor, fine) {
+            // Set book details in modal
+            document.getElementById('modalBookTitle').textContent = bookTitle;
+            document.getElementById('modalBookAuthor').textContent = 'by ' + bookAuthor;
+
+            // Show fine notice if there's a fine
+            if (fine > 0) {
+                document.getElementById('fineAmount').textContent = fine;
+                document.getElementById('fineNotice').style.display = 'block';
+            } else {
+                document.getElementById('fineNotice').style.display = 'none';
+            }
+
+            // Set form action
+            document.getElementById('returnForm').action = '/returnBook/' + issueId + '/';
+
+            // Show modal
+            document.getElementById('returnModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('returnModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('returnModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

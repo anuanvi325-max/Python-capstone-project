@@ -1,0 +1,376 @@
+/* --------------------
+   CSS RESET & BASE
+--------------------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body {
+    height: 100vh;
+    color: #f5f1ec;
+}
+
+/* --------------------
+   CONTAINER LAYERS
+--------------------- */
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}
+
+/* Soft cinematic overlay */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: url('../assets/loginBackground.jpg') no-repeat center center/cover;
+    backdrop-filter: blur(2px);
+    z-index: 2;
+}
+
+.contents {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+}
+
+/* --------------------
+   NAVBAR
+--------------------- */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 64px;
+}
+
+.navbar h1 {
+    font-size: 28px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: #f7e9d7;
+    cursor: pointer;
+    font-family: cursive;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+}
+
+.navbar a {
+    font-family: 'Courier New', Courier, monospace;
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: white;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.navbar a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background: #c99b63;
+    transition: width 0.2s ease;
+}
+
+.navbar a:hover {
+    color: #f9e2c3;
+}
+
+.navbar a:hover::after {
+    width: 100%;
+}
+
+/* --------------------
+   LOGIN CARD
+--------------------- */
+
+.form {
+    height: calc(14% - 96px);
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+}
+
+/* .login-form{
+    height: calc(33% - 96px);
+} */
+
+
+
+.login-card {
+    width: 29vw;
+    max-height: 80vh;
+    background: rgba(58, 32, 19, 0.88);
+    border-radius: 18px;
+    padding: 3rem 2rem;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    overflow-y: auto;
+}
+
+.login-card::-webkit-scrollbar {
+    background-color: #e7ddcf56;
+    height: 8px;
+    border-radius: 5px;
+    width: 3px;
+}
+.login-card::-webkit-scrollbar-thumb{
+    Background-color: #c99b63;
+    border-radius: 5px;
+}
+
+
+/* --------------------
+   LOGO SECTION
+--------------------- */
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 2.2rem;
+    /* text-align: center; */
+    justify-content: center;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #c99b63, #a57745);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    color: #2b160c;
+    letter-spacing: 1px;
+    font-size: 1.3rem;
+}
+
+.logo-text h1 {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.logo-text p {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #cdb8a3;
+}
+
+/* --------------------
+   FORM INPUTS
+--------------------- */
+
+.form-group {
+    margin-bottom: 1.8rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 0.5rem;
+    color: #d9c7b3;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #f7e9d7;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #bfae99;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #c99b63;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* --------------------
+   OPTIONS
+--------------------- */
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin: 8px 0 22px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #d3c1ac;
+}
+
+.remember-me input {
+    accent-color: #c99b63;
+}
+
+.forgot-password {
+    text-decoration: none;
+    color: #c99b63;
+    transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+    color: #f0d2a6;
+}
+
+/* --------------------
+   BUTTON
+--------------------- */
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #d17a4c, #b65e36);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+    transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+/* --------------------
+   SIGNUP
+--------------------- */
+
+.signup-section {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #d3c1ac;
+}
+
+.signup-link {
+    color: #c99b63;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+    color: #f0d2a6;
+}
+
+/* --------------------
+   FLIP ANIMATION
+--------------------- */
+
+.flip-container {
+    width: 29vw;
+    height: auto;
+    perspective: 1000px;
+}
+
+.flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-container.flipped .flip-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-front,
+.flip-back {
+    width: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+.flip-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.flip-back {
+    transform: rotateY(180deg);
+}
+
+/* Role select styling */
+.role {
+    margin-bottom: 1.8rem;
+}
+
+.role label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 0.5rem;
+    color: #d9c7b3;
+}
+
+.role select {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #f7e9d7;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.role select:focus {
+    outline: none;
+    border-color: #c99b63;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.role select option {
+    background: #3a2013;
+    color: #f7e9d7;
+}

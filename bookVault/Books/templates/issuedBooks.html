@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Issued Books</title>
+    <link rel="stylesheet" href="{% static 'css/librarianDashboard.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at top,
+                    #4a3b3b 0%,
+                    #2f2626 70%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2b1e17;
+        }
+
+        .wrapper {
+            width: 90%;
+        }
+
+        .card {
+            background: #e6d4b8;
+            border-radius: 18px;
+            padding: 36px 40px;
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            position: relative;
+        }
+
+        /* .card::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            height: 30px;
+            background: #e6d4b8;
+            border-radius: 0 0 100% 100%;
+            filter: blur(0.3px);
+        } */
+
+        .title {
+            font-family: "Playfair Display", serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #7a6a5a;
+            margin-bottom: 28px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            color: #4f4a4a;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text-main);
+            font-weight: 500;
+            padding-bottom: 0.7rem;
+        }
+
+        td {
+            padding: 0.7rem 0;
+            border-top: 1px solid var(--border-soft);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="card">
+            <div class="title">Issued Books</div>
+            <div class="subtitle">Currently in circulation</div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Student</th>
+                        <th>Due</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% if issued_books %}
+                        {% for issue in issued_books %}
+                        <tr>
+                            <td>{{ issue.book.title }}</td>
+                            <td>{{ issue.user.first_name }} {{ issue.user.last_name }}</td>
+                            <td>{{ issue.due_date|date:"d M" }}</td>
+                            <td>
+                                {% if issue.due_date < today %}
+                                    <span class="status overdue">Overdue</span>
+                                {% else %}
+                                    <span class="status issued">Issued</span>
+                                {% endif %}
+                            </td>
+                            <td class="action"><a href="#">Return</a></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 2rem;">No issued books</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

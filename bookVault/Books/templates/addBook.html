@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book</title>
+    <link rel="stylesheet" href="{% static 'css/addBook.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="history.back()">← Back</button>
+
+        <h1>Add New Book</h1>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Book Title *</label>
+                    <input type="text" id="title" name="title" placeholder="Enter book title" required>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author *</label>
+                    <input type="text" id="author" name="author" placeholder="Enter author name" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="isbn_number">ISBN Number *</label>
+                    <input type="text" id="isbn_number" name="isbn_number" placeholder="Enter ISBN" required>
+                </div>
+                <div class="form-group">
+                    <label for="publisher">Publisher *</label>
+                    <input type="text" id="publisher" name="publisher" placeholder="Enter publisher name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="description">description *</label>
+                    <textarea type="text" id="description" name="description" placeholder="Enter description"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="intro">intro *</label>
+                    <textarea type="text" id="intro" name="intro" placeholder="Enter intro name" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <input type="text" id="category" name="category" placeholder="Enter category" required>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language *</label>
+                    <input type="text" id="language" name="language" placeholder="Enter language" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="published_date">Published Date *</label>
+                    <input type="date" id="published_date" name="published_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="pages">Pages *</label>
+                    <input type="number" id="pages" name="pages" placeholder="Enter number of pages" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="price">Price (₹) *</label>
+                    <input type="number" id="price" name="price" placeholder="Enter price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="total_quantity">Quantity *</label>
+                    <input type="number" id="total_quantity" name="total_quantity" placeholder="Enter quantity"
+                        required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editor">Editor</label>
+                    <input type="text" id="editor" name="editor" placeholder="Enter editor name">
+                </div>
+                <div class="form-group">
+                    <label for="about_author">About Author</label>
+                    <textarea id="about_author" name="about_author" placeholder="Enter information about the author"
+                        rows="4"></textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="cover_image">Cover Image</label>
+                <input type="file" id="cover_image" name="cover_image" accept="image/*">
+            </div>
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+</body>
+
+</html>

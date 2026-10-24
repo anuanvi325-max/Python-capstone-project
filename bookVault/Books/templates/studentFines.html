@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student – Pending Fines</title>
+    <link rel="stylesheet" href="{% static 'css/pendingFines.css' %}">
+</head>
+
+<body>
+    <div class="dashboard-bg"></div>
+
+    <div class="modal-container">
+        <button class="close-btn" onclick="closeFinesModal()">✕</button>
+
+        <div class="modal-card">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="header-content">
+                    <div class="icon-box">💰</div>
+                    <div class="header-text">
+                        <h1>Pending Fines</h1>
+                        <p>View and manage student library fines</p>
+                    </div>
+                </div>
+
+                <div class="fine-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="totalStudents">{{ issued_books_with_fines }}</div>
+                        <div class="stat-label">Books with Fines</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="totalFines">{{ pending_fines_count }}</div>
+                        <div class="stat-label">Total Fine Amount</div>
+                    </div>
+                    <!-- <div class="stat">
+                        <div class="stat-value" id="overdueFines">{{ overdue_fines }}</div>
+                        <div class="stat-label">Overdue Fines</div>
+                    </div> -->
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div class="fines-list" id="finesList">
+                    <!-- Fine items will be populated here -->
+
+                </div>
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">✓</div>
+                    <h2>No Pending Fines</h2>
+                    <p>All students are up to date with their fines!</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <!-- <div class="modal-footer">
+                <div class="footer-text">
+                    Last updated: <span id="lastUpdated">Today at 2:30 PM</span>
+                </div>
+                <button class="pay-btn" onclick="exportFines()">Export Report</button>
+            </div> -->
+        </div>
+    </div>
+
+    <script>
+        function renderFines() {
+            const finesList = document.getElementById('finesList');
+            const emptyState = document.getElementById('emptyState');
+            const studentFines = {{ student_fines|safe }};
+
+            if (studentFines.length === 0) {
+                finesList.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            finesList.innerHTML = studentFines.map(fine => `
+                <div class="fine-item">
+                    <div class="student-info">
+                        <div class="student-avatar">${fine.initials}</div>
+                        <div class="student-details">
+                            <h3>${fine.name}</h3>
+                            <p>ID: ${fine.student_id}</p>
+                        </div>
+                    </div>
+                    <div class="fine-details">
+                        <div class="fine-amount">
+                            <div class="amount">₹${fine.amount.toFixed(2)}</div>
+                            <div class="due-date">Due: ${new Date(fine.due_date).toLocaleDateString()}</div>
+                        </div>
+                        <span class="status-badge status-${fine.status}">
+                            ${fine.status.charAt(0).toUpperCase() + fine.status.slice(1)}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function calculateStats() {
+            const studentFines = {{ student_fines|safe }};
+            const totalFines = studentFines.reduce((sum, fine) => sum + fine.amount, 0);
+            const overdueFines = studentFines
+                .filter(fine => fine.status === 'overdue')
+                .reduce((sum, fine) => sum + fine.amount, 0);
+
+            document.getElementById('totalStudents').textContent = {{ total_students }};
+            document.getElementById('totalFines').textContent = '₹' + totalFines.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            document.getElementById('overdueFines').textContent = '₹' + overdueFines.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function closeFinesModal() {
+            document.querySelector('.modal-container').style.display = 'none';
+            window.location.href = '/librarianDashboard'
+        }
+
+        function exportFines() {
+            alert('Exporting pending fines report...');
+            // Add your export logic here
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFines();
+            calculateStats();
+        });
+
+        // Close modal when clicking outside
+        document.querySelector('.modal-container').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFinesModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

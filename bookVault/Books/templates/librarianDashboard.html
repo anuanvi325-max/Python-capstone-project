@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Librarian Dashboard</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap"
+        rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'css/studentDashboard.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/homePage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/librarianDashboard.css' %}">
+</head>
+
+<script>
+    function navigate(page) {
+        if (page === 'homePage') {
+            console.log("Navigating to Home Page");
+            window.location.href = '/homePage'
+        }
+        else if (page === 'contact') {
+            window.location.href = '/contactPage'
+        }
+        else if (page === 'pendingFines') {
+            window.location.href = 'pendingFines/'
+        }
+        else if (page === 'booksLists') {
+            window.location.href = 'booksLists/'
+        }
+        else if (page === 'booksIssued') {
+            window.location.href = 'booksIssued/'
+        }
+        else if (page === 'addBook') {
+            window.location.href = 'addBook/'
+        }
+        else if (page === 'bookIssueRequests') {
+            window.location.href = 'bookIssueRequests/' 
+        }
+        else {
+            window.location.href = '/loginPage'
+        }
+    }
+</script>
+
+<body>
+
+    <div class="navbar">
+        <h1 onclick="navigate('homePage')" style="color: var(--beige-medium);">BookVault</h1>
+        <ul>
+            <li><a href="/homePage">Home</a></li>
+            <li><a href="/contactPage">Contact</a></li>
+            <li><a href="/profilePage"><img src="../static/assets/profile-icon.png" alt="user-icon"></a></li>
+        </ul>
+    </div>
+    <div class="container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <h1>Librarian Dashboard</h1>
+            <p>System overview & daily operations</p>
+        </header>
+
+        <!-- STATS -->
+        <section class="stats">
+            <div class="stat-card" onclick="navigate('booksLists')">
+                <span>Total Books</span>
+                <h2>{{ total_books }}</h2>
+            </div>
+            <div class="stat-card" onclick="navigate('booksIssued')">
+                <span>Books Issued</span>
+                <h2>{{issued_books}}</h2>
+            </div>
+            <!-- <div class="stat-card">
+                <span>Overdue</span>
+                <h2>37</h2>
+            </div> -->
+            <div class="stat-card" onclick="navigate('pendingFines')">
+                <span>Pending Fines</span>
+                <h2>₹{{ total_pending_fines|floatformat:0 }}</h2>
+            </div>
+        </section>
+
+        <!-- MAIN -->
+        <section class="main-grid">
+
+            <!-- ISSUED / OVERDUE -->
+            <div class="section">
+                <div class="section-header">
+                    <h3>Issued & Overdue Books</h3>
+                    <div class="search">
+                        <input type="text" placeholder="Search books or students">
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Student</th>
+                            <th>Due</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_issued_books %}
+                        {% for issue in recent_issued_books %}
+                        <tr>
+                            <td>{{ issue.book.title }}</td>
+                            <td>{{ issue.user.first_name }}</td>
+                            <td>{{ issue.due_date|date:"d M" }}</td>
+                            <td>
+                                {% if issue.due_date < today %} <span class="status overdue">Overdue</span>
+                                    {% else %}
+                                    <span class="status issued">Issued</span>
+                                    {% endif %}
+                            </td>
+                            <td class="action"><a href="/librarianDashboard/booksLists/bookDetailsPage/{{ issue.book.id }}">View</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 1rem;">No issued books</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ACTIVITY -->
+            <div class="section">
+                <div class="section-header">
+                    <h3>Recent Activity</h3>
+                </div>
+
+                <div class="activity">
+                    {% if recent_activities %}
+                    {% for activity in recent_activities %}
+                    <div class="activity-item">
+                        <p>{{ activity.icon }} <strong>{{ activity.message }}</strong></p>
+                        <span>
+                            {% if activity.date == today %}
+                                Today
+                            {% elif activity.date|add:86400 == today %}
+                                Yesterday
+                            {% else %}
+                                {{ activity.date|date:"M d, Y" }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="activity-item">
+                        <p>No recent activities</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- QIUCK ACTIONS -->
+            <div class="quick-actions-container">
+                <div class="quick-actions-header">
+                    <div class="quick-actions-title">
+                        Quick Actions
+                    </div>
+                </div>
+
+                <div class="quick-actions-grid">
+
+                    <div class="quick-action-card primary" onclick="navigate('bookIssueRequests')">
+                        <span class="action-icon">📘</span>
+                        <div class="action-label-wrapper">
+                            <p class="action-label">Issue Book Requests</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-action-card warning">
+                        <span class="action-icon">⏳</span>
+                        <div class="action-label-wrapper">
+                            <p class="action-label">Overdue Books</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-action-card success">
+                        <span class="action-icon">↩️</span>
+                        <div class="action-label-wrapper">
+                            <p class="action-label">Return Book</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-action-card info" onclick="navigate('addBook')">
+                        <span class="action-icon">➕</span>
+                        <div class="action-label-wrapper">
+                            <p class="action-label">Add New Book</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+</body>
+
+</html>

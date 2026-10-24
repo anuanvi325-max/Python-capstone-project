@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Contact – BookVault</title>
+    <link rel="stylesheet" href="{% static 'css/contactPage.css' %}" />
+</head>
+
+<body>
+
+    <section class="contact-section">
+        <div class="contact-container">
+
+            <div class="contact-text">
+                <h1>Let’s Talk Books</h1>
+                <p class="para">
+                    Questions, feedback, collaboration ideas, or quiet praise—
+                    all are welcome here. Fill out the form and we’ll get back
+                    to you with intention.
+                </p>
+                <div class="contact-info">
+                    <p class="email"><img src="../static/assets/mail.png" alt=""> Email </p>
+                    <a href="mailto:ashrajsingh9@gmail.com">ashrajsingh9@gmail.com</a>
+
+                    <p class="phone"><img src="../static/assets/phone.png" alt=""> Phone </p>
+                    <a href="tel:+919827900755">+91 9827900755</a>
+
+                </div>
+            </div>
+
+            <form class="contact-form" method="post">
+
+                {% csrf_token %} 
+                <div class="field-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Your name" required  autocomplete="off"/>
+                </div>
+
+                <div class="field-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="you@example.com" required autocomplete="off"/>
+                </div>
+
+                <div class="field-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" placeholder="What’s this about?" autocomplete="off"/>
+                </div>
+
+                <div class="field-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" rows="5" placeholder="Write your thoughts here..." required></textarea>
+                </div>
+
+                <button id="submitButton" type="submit">Send Message</button>
+            </form>
+
+        </div>
+    </section>
+
+</body>
+
+</html>

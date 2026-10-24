@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>BookVault – Book Management System</title>
+    <link rel="stylesheet" href="{% static 'css/homePage.css' %}" />
+</head>
+<script>
+    function navigate(page) {
+        if (page === 'homePage') {
+            console.log("Navigating to Home Page");
+            window.location.href = '/homePage'
+        }
+        else if (page === 'contact') {
+            window.location.href = '/contactPage'
+        }
+        else {
+            window.location.href = '/loginPage'
+        }
+    }
+</script>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h1 onclick="navigate('homePage')">BookVault</h1>
+        <ul>
+            <li><a href="/homePage">Home</a></li>
+            <li><a href="/contactPage">Contact</a></li>
+            <li><a href="/loginPage">Get Started</a></li>
+        </ul>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Your Library,<br>Organized Like a Thoughtful Mind</h1>
+            <p>
+                BookVault is a modern book management system designed to bring order,
+                elegance, and clarity to your digital library — just as libraries were
+                always meant to be.
+            </p>
+            <button onclick="navigate('loginPage')">Explore the Collection</button>
+        </div>
+
+        <div class="hero-image">
+            <img src="../static/assets/libraryImg.png" alt="Online Library" />
+        </div>
+    </section>
+
+</body>
+
+</html>

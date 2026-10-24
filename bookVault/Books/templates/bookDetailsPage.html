@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Book Details</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bookDetails.css' %}" />
+</head>
+
+<body>
+
+    <div class="app-frame">
+        <div class="app-inner">
+
+            <!-- MAIN -->
+            <main class="main">
+
+                <!-- CONTENT -->
+                <section class="content">
+
+                    <!-- COVER -->
+                    <div class="book-cover">
+                        {% if cover_image %}
+                            <img src="/media/{{ cover_image }}" alt="Book Cover" />
+                        {% else %}
+                            <img src="{% static 'assets/default-cover.jpg' %}" alt="No Cover Available" />
+                        {% endif %}
+                    </div>
+
+                    <!-- DETAILS -->
+                    <div class="details">
+                        <h1>{{title}}</h1>
+                        <span>{{author}}</span>
+
+                        <p class="intro">
+                            {% if intro %}
+                            {{intro}}
+                            {% else %}
+                            No intro available
+                            {% endif %}
+                        </p>
+
+                        <div class="actions">
+                            <button class="primary-btn">Start reading ↗</button>
+                        </div>
+
+                        <div class="lower">
+                            <div class="block">
+                                <h3>Description</h3>
+                                <p class="description">
+                                    {% if description %}
+                                    {{description}}
+                                    {% else %}
+                                    No description available
+                                    {% endif %}
+                                </p>
+                                <h3>Author</h3>
+                                <p class="description">
+                                    {% if about_author %}
+                                    {{about_author}}
+                                    {% else %}
+                                    No information about author available
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <div class="meta">
+                                <div>
+                                    <strong>Editors</strong><br>
+                                    <p class="author">{% if editor %} {{editor}}
+                                        {% else %} No editor available
+                                        {% endif %}</p>
+                                </div>
+                                <div>
+                                    <strong>Language</strong><br>
+                                    <p class="author">{% if language %} {{language}}
+                                        {% else %} No language available
+                                        {% endif %}</p>
+                                </div>
+                                <div>
+                                    <strong>Pages</strong><br>
+                                    <p class="author">{% if pages %} {{pages}}
+                                        {% else %}
+                                    <p>No pages available</p>
+                                    {% endif %}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+            </main>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

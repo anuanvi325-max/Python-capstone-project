@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Library Books</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/totalBooks.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/librarianDashboard.css' %}"> -->
+
+    <script>
+        function navigate(page, bookId) {
+            if (page === 'homePage') {
+                console.log("Navigating to Home Page");
+                window.location.href = '/homePage'
+            }
+            else if (page === 'contact') {
+                window.location.href = '/contactPage'
+            }
+            else if (page === 'pendingFines') {
+                window.location.href = 'pendingFines/'
+            }
+            else if (page === 'booksLists') {
+                window.location.href = 'booksLists/'
+            }
+            else if (page === 'addBook') {
+                window.location.href = 'addBook/'
+            }
+            else if (page === 'bookDetails') {
+                window.location.href = 'bookDetailsPage/' + bookId + '/'
+            }
+            else {
+                window.location.href = '/loginPage'
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h1 onclick="navigate('homePage')">BookVault</h1>
+        <ul>
+            <li><a href="/homePage">Home</a></li>
+            <li><a href="/contactPage">Contact</a></li>
+            <li><a href="/profilePage"><img src="../static/assets/profile-icon.png" alt="user-icon"></a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Library Collection</h1>
+            <p>Browse available and issued books</p>
+        </header>
+
+        <div class="toolbar">
+            <div class="search">
+                <input type="text" placeholder="Search by title, author, ISBN">
+            </div>
+            <button type="submit" class="add-books" onclick="navigate('addBook')">Add Books</button>
+        </div>
+        <div class="flex-container">
+
+            <section class="books">
+                {% if all_books %}
+                {% for book in all_books %}
+                <div class="book-card">
+                    <div class="book-info">
+                        <h3>{{ book.title }}</h3>
+                        <div class="author">{{ book.author }}</div>
+                        <div class="meta">{{ book.category }} · {{ book.published_date|date:"Y" }}</div>
+                        <span class="status {{ book.status|lower }}">
+                            {% if book.available_quantity %} Available
+                            {% else %} Unavailable
+                            {% endif %}
+                        </span>
+                        <p><strong>Price:</strong> ₹{{ book.price }}</p>
+                        <p><strong>Total Quantity:</strong> {{ book.total_quantity }}</p>
+                        <p><strong>Available Quantity:</strong> {{ book.available_quantity }}</p>
+                        <p><strong>ISBN:</strong> {{ book.isbn_number }}</p>
+                        <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+                        <p><strong>Created By:</strong>
+                            {% if book.created_by.first_name %}
+                            {{ book.created_by.first_name }}
+                            {% else %}
+                            {{ book.created_by.username }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="actions">
+                        <button onclick="navigate('bookDetails', {{ book.id }})">View Details</button>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div style="text-align: center; padding: 3rem; color: #777; font-size: 1.1rem; width: 100%;">
+                    <h2>No Books Found</h2>
+                    <p>No books in the library collection yet.</p>
+                </div>
+                {% endif %}
+
+                
+            </section>
+        </div>
+        
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Issued Books – Student</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #3b2a2a, #2a1e1e);
+            min-height: 100vh;
+            padding: 40px;
+            color: #2b1e17;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-family: "Playfair Display", serif;
+            font-size: 32px;
+            color: #f1e3c8;
+            margin-bottom: 6px;
+        }
+
+        .student-meta {
+            color: #cbb8a0;
+            font-size: 14px;
+        }
+
+        .issued-container {
+            background: #e6d4b8;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6a5846;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 16px 0;
+            font-size: 14px;
+            color: #2b1e17;
+        }
+
+        .book-title {
+            font-weight: 600;
+            color: #3a2921;
+        }
+
+        .author {
+            font-size: 13px;
+            color: #6b5a48;
+        }
+
+        .date {
+            color: #5f4f40;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .active {
+            background: #d9c6a5;
+            color: #5a4534;
+        }
+
+        .overdue {
+            background: #b66a4a;
+            color: #ffffff;
+        }
+
+        .returned {
+            background: #6f8f72;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Issued Books</h1>
+        <p class="student-meta">
+            Student: <strong>{{ request.user.first_name }}</strong> · ID: {{ user_id }}
+        </p>
+    </div>
+
+    <div class="issued-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Issued On</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if issued_books %}
+                    {% for book in issued_books %}
+                        <tr>
+                            <td>
+                                <div class="book-title">{{ book.book.title }}</div>
+                                <div class="author">{{ book.book.author }}</div>
+                            </td>
+                            <td class="date">{{ book.issued_at|date:"d M Y" }}</td>
+                            <td class="date">{{ book.due_date|date:"d M Y" }}</td>
+                            <td>
+                                {% if book.due_date < today %}
+                                    <span class="status overdue">Overdue</span>
+                                {% else %}
+                                    <span class="status issued">Issued</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 1rem;">No issued books</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

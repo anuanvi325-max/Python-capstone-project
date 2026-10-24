@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Book Issue</title>
+    <link rel="stylesheet" href="{% static 'css/confirmIssueBook.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-card">
+            <h1>📚 Confirm Book Issue</h1>
+            
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+            
+            <div class="book-details">
+                <h2>{{ book.title }}</h2>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>ISBN:</strong> {{ book.isbn_number }}</p>
+                <p><strong>Category:</strong> {{ book.category }}</p>
+            </div>
+            
+            <div class="issue-info">
+                <p><strong>Issue Date:</strong> {{ today }}</p>
+                <p><strong>Due Date:</strong> {{ due_date }}</p>
+                <p><strong>Loan Period:</strong> 14 days</p>
+            </div>
+            
+            <div class="warning">
+                ⚠️ Late returns will incur fines. Please return on time.
+            </div>
+            
+            <form method="POST" action="{% url 'processIssueBook' book.id %}">
+                {% csrf_token %}
+                <div class="button-group">
+                    <button type="submit" class="btn-confirm">Confirm Issue</button>
+                    <a href="{% url 'studentDashboard' %}" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookVault - Login</title>
+    <link rel="stylesheet" href="{% static 'css/loginPage.css' %}">
+</head>
+
+<script>
+    function navigate(page) {
+        if (page === 'homePage') {
+            console.log("Navigating to Home Page");
+            window.location.href = '/homePage'
+        }
+        else if (page === 'contact') {
+            window.location.href = '/contactPage'
+        }
+        else {
+            window.location.href = '/loginPage'
+        }
+    }
+</script>
+
+<body>
+    <div class="container">
+        <div class="background"></div>
+        <div class="overlay"></div>
+
+        <div class="contents">
+
+            <div class="navbar">
+                <h1 onclick="navigate('homePage')">BookVault</h1>
+                <ul>
+                    <li><a href="/homePage">Home</a></li>
+                    <li><a href="/contactPage">Contact</a></li>
+                    <li><a href="/loginPage">Get started</a></li>
+                </ul>
+            </div>
+
+            <div class="form">
+                <div class="flip-container" id="flipContainer">
+                    <div class="flip-inner">
+                        <!-- LOGIN FORM (Front) -->
+                        <form class="login-card flip-front" action="{% url 'authLogin' %}" method="post">
+                            {% csrf_token %}
+
+                            <div class="logo-section">
+                                <div class="logo-icon">BV</div>
+                                <div class="logo-text">
+                                    <h1>BookVault</h1>
+                                    <p>Library Management</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="login-email" name="email" placeholder="your@email.com" required
+                                    autocomplete="off">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="login-password" name="password" placeholder="••••••••"
+                                    required autocomplete="off">
+                            </div>
+
+                            <div class="form-options">
+                                <a href="#" class="forgot-password">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="login-btn">Log In</button>
+
+                            <div class="signup-section">
+                                <p>Don't have an account? <a href="#" class="signup-link"
+                                        onclick="flipCard(event)">Create One</a></p>
+                            </div>
+                        </form>
+
+                        <!-- SIGNUP FORM (Back) -->
+                        <form class="login-card flip-back signup-form" style="padding: 2rem;"
+                            action="{% url 'authSignup' %}" method="post">
+                            {% csrf_token %}
+                            
+                            <div class="logo-section">
+                                <div class="logo-icon">BV</div>
+                                <div class="logo-text">
+                                    <h1>BookVault</h1>
+                                    <p>Library Management</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="signup-name" name="name" placeholder="John Doe" required
+                                    autocomplete="off">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="signup-email" name="email" placeholder="your@email.com" required
+                                    autocomplete="off">
+                            </div>
+
+                            <div class="role">
+                                <label>Select Role:</label>
+                                <select id="signup-role" name="role" required>
+                                    <option value="" disabled selected>Select your role</option>
+                                    <option value="reader">Reader</option>
+                                    <option value="librarian">Librarian</option>
+                                    <!-- <option value="admin">Admin</option> -->
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Enter phone No.</label>
+                                <input type="tel" id="signup-phone" name="phone" placeholder="+91 xxxxxxxxxxx"
+                                    required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Enter address</label>
+                                <input type="text" id="signup-address" name="address" placeholder="27 kholi..."
+                                    required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Create Password</label>
+                                <input type="password" id="signup-password" name="password" placeholder="••••••••"
+                                    required autocomplete="off">
+                            </div>
+
+                            <button type="submit" class="login-btn">Sign Up</button>
+
+                            <div class="signup-section">
+                                <p>Already have an account? <a href="#" class="signup-link"
+                                        onclick="flipCard(event)">Log In</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Reset to login form when page loads
+        window.addEventListener('load', function() {
+            const flipContainer = document.getElementById('flipContainer');
+            // Remove flipped class to show login form
+            flipContainer.classList.remove('flipped');
+            
+            // Clear all form fields
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('signup-name').value = '';
+            document.getElementById('signup-email').value = '';
+            document.getElementById('signup-password').value = '';
+            document.getElementById('signup-role').value = '';
+        });
+
+        function flipCard(event) {
+            event.preventDefault();
+            const flipContainer = document.getElementById('flipContainer');
+            flipContainer.classList.toggle('flipped');
+            
+            // Clear signup form when flipping to signup
+            if (!flipContainer.classList.contains('flipped')) {
+                // Clearing when going back to login
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+            } else {
+                // Clearing when going to signup
+                document.getElementById('signup-name').value = '';
+                document.getElementById('signup-email').value = '';
+                document.getElementById('signup-password').value = '';
+                document.getElementById('signup-role').value = '';
+            }
+        }
+    </script>
+</body>
+
+</html>
